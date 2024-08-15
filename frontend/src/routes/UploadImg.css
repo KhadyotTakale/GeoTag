@@ -20,7 +20,7 @@ h2 {
 .upload-section {
   display: flex;
   flex-direction: column;
-  align-items: center; /* This centers the label and input in the middle */
+  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -32,8 +32,8 @@ label {
 
 input[type="file"] {
   padding: 10px;
-  width: 80%; /* Makes the input more centered and wider */
-  max-width: 300px; /* Limits the maximum width */
+  width: 80%;
+  max-width: 300px;
   margin-bottom: 20px;
 }
 
@@ -54,21 +54,28 @@ input[type="file"] {
   margin-top: 30px;
 }
 
-.image-list {
-  list-style-type: none;
-  padding: 0;
+.image-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
 }
 
-.image-list li {
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
+.image-table th,
+.image-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
 }
 
-.preview-img {
+.image-table th {
+  background-color: rgb(195, 86, 217);
+  color: white;
+}
+
+.image-table td img {
   max-width: 100px;
   max-height: 100px;
-  margin-left: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
