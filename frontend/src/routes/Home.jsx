@@ -3,19 +3,6 @@ import "./Home.css";
 import img1 from "/src/assets/img1.png";
 
 const Home = () => {
-  const [uploadedImage, setUploadedImage] = useState(null);
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <>
       <div className="container">
@@ -28,11 +15,9 @@ const Home = () => {
       </div>
 
       <div className="info">
-        <div className="imgadd">
-          <h1>Add Image Here</h1>
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-          {uploadedImage && <img src={uploadedImage} alt="Uploaded" />}
-        </div>
+        <div className="info1">info1</div>
+        <div className="info2">info2</div>
+        <div className="info3">info3</div>
       </div>
     </>
   );

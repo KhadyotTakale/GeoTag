@@ -1,11 +1,5 @@
 /* Home.css */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .container {
   background-color: white;
   padding: 20px;
@@ -46,5 +40,17 @@ h1 {
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+}
+
+.info1 {
+  width: 50%;
+  height: 50%;
+}
+.info2 {
+  width: 50%;
+  height: 50%;
+}
+.info3 {
+  width: 50%;
+  height: 50%;
 }
