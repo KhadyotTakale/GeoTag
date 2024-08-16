@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useGeolocated } from "react-geolocated";
 import "./UploadImg.css";
 import img2 from "/src/assets/img2.svg"; // Import the image
 import exifr from "exifr";
@@ -8,11 +9,21 @@ const UploadImg = () => {
   const [previewImages, setPreviewImages] = useState([]);
   const [imageData, setImageData] = useState([]);
 
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+    positionOptions: {
+      enableHighAccuracy: true,
+    },
+    userDecisionTimeout: 5000,
+  });
+
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
+    const uploadTime = new Date().toLocaleString(); // Capture upload time
+
     const newImages = files.map((file, index) => ({
       name: `img${uploadedImages.length + index + 1}`,
       file: file,
+      uploadTime, // Add upload time
     }));
 
     // Add new images to the uploaded images list
@@ -26,17 +37,23 @@ const UploadImg = () => {
     const exifPromises = files.map(async (file) => {
       try {
         const data = await exifr.parse(file);
+        const latitude = data.latitude || (coords ? coords.latitude : "N/A");
+        const longitude = data.longitude || (coords ? coords.longitude : "N/A");
+        const dateTime = data.DateTimeOriginal
+          ? new Date(data.DateTimeOriginal).toLocaleString()
+          : uploadTime; // Use upload time if EXIF date is not available
+
         return {
-          latitude: data.latitude,
-          longitude: data.longitude,
-          dateTime: data.DateTimeOriginal,
+          latitude,
+          longitude,
+          dateTime,
         };
       } catch (error) {
         console.error("Error parsing EXIF data:", error);
         return {
-          latitude: "N/A",
-          longitude: "N/A",
-          dateTime: "N/A",
+          latitude: coords ? coords.latitude : "N/A",
+          longitude: coords ? coords.longitude : "N/A",
+          dateTime: uploadTime, // Use upload time if error occurs
         };
       }
     });
@@ -48,15 +65,14 @@ const UploadImg = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Store images and their data in the database (Backend integration needed)
+    // Handle form submission
     console.log("Uploaded images:", uploadedImages);
     console.log("Extracted image data:", imageData);
   };
 
   return (
     <div className="upload-container">
-      <img src={img2} alt="Upload" className="upload-icon" /> {/* Add image */}
+      <img src={img2} alt="Upload" className="upload-icon" />
       <h2>Upload an Image</h2>
       <form onSubmit={handleSubmit}>
         <div className="upload-section">
@@ -69,7 +85,6 @@ const UploadImg = () => {
             required
           />
         </div>
-
         <button type="submit" className="upload-button">
           Upload
         </button>
@@ -98,16 +113,15 @@ const UploadImg = () => {
                   </td>
                   <td>{imageData[index]?.latitude || "N/A"}</td>
                   <td>{imageData[index]?.longitude || "N/A"}</td>
-                  <td>
-                    {imageData[index]?.dateTime
-                      ? new Date(imageData[index].dateTime).toLocaleDateString()
-                      : "N/A"}
-                  </td>
+                  <td>{imageData[index]?.dateTime || "N/A"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+      )}
+      {!isGeolocationEnabled && (
+        <p>Please enable geolocation in your browser to use this feature.</p>
       )}
     </div>
   );
